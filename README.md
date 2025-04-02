@@ -1,4 +1,4 @@
-# Igir Collection Manager
+# Igir & RomM
 
 **This is building upon the original documentation from RomM: [Igir Collection Manager](https://docs.romm.app/latest/Tools/Igir-Collection-Manager/)**
 
