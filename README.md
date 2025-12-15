@@ -15,7 +15,8 @@ The directory structure is important for running the bulk ROM renaming script. B
 ├── dats/ # DAT files from no-intro.org
 ├── roms/ # Original ROM collection
 ├── roms-unverified/ # Working copy of ROMs
-└── igir-romm-cleanup.sh
+├── igir-romm-1h1r.sh # 1G1R (One Game, One Rom) script for deduplication with region/language preferences & excluding non-retail variants
+└── igir-romm-only-retail.sh # Creates a "clean" retail-only collection ready for RomM import, without duplicates or non-retail variants.
 ```
 
 ### Initial Setup Steps
@@ -24,19 +25,19 @@ The directory structure is important for running the bulk ROM renaming script. B
     `cp -r roms/ roms-unverified/`  
     This provides a safe working environment and allows for easy script adjustment if needed.
 2. **Download DAT Files:**
-    - For cartridge-based systems:
+    * For cartridge-based systems:
         - Visit [No-Intro.org Daily Download](https://datomatic.no-intro.org/index.php?page=download&op=daily)
         - Download the latest DAT compilation
-    - For optical media (e.g., PlayStation):
+    * For optical media (e.g., PlayStation):
         - Visit [redump.org](http://redump.org/downloads/)
         - Download platform-specific DAT files
     Extract the DAT files to your `dats` directory. You can optionally extract a subset of the .dat files into the directory instead.
 
 ## Configuration
 
-### cleanup script
+### "only-retail" script
 
-The **cleanup script** (`igir-romm-cleanup.sh`) is a Bash script designed to process and "clean up" a ROM collection for use with RomM. It uses the latest version of Igir (via `npx`) to verify, organize, and filter ROMs against No-Intro/Redump DAT files, keeping only verified retail releases while extracting archives and generating reports.
+The **only-retail script** (`igir-romm-only-retail.sh`) is a Bash script designed to process and "clean up" a ROM collection for use with RomM. It uses the latest version of Igir (via `npx`) to verify, organize, and filter ROMs against No-Intro/Redump DAT files, keeping only verified retail releases while extracting archives and generating reports.
 
 **What it does, step by step:**
 
@@ -54,10 +55,10 @@ The **cleanup script** (`igir-romm-cleanup.sh`) is a Bash script designed to pro
 
 **Overall effect:**
 
-- Verified retail ROMs that match the DATs are extracted (if needed), moved to a clean, organized `roms-verified/` structure, and tested for integrity.
-- Unmatched/unknown files stay in `roms-unverified/` (safe, no deletions).
-- Multi-disc games (e.g., PS1) get grouped into folders as defined by the DATs.
-- It measures and displays runtime with `time`.
+* Verified retail ROMs that match the DATs are extracted (if needed), moved to a clean, organized `roms-verified/` structure, and tested for integrity.
+* Unmatched/unknown files stay in `roms-unverified/` (safe, no deletions).
+* Multi-disc games (e.g., PS1) get grouped into folders as defined by the DATs.
+* It measures and displays runtime with `time`.
 
 This creates a "clean" retail-only collection ready for RomM import, without duplicates or non-retail variants. (There's a separate 1G1R script for further deduplication with region/language preferences.)
 
@@ -65,9 +66,9 @@ This creates a "clean" retail-only collection ready for RomM import, without dup
 
 * Create the `roms-unverified/` directory and populate it with a copy of your ROM collection (e.g., `cp -r roms/ roms-unverified/`).
 * Create the `dats/` directory and place your No-Intro/Redump DAT files inside it.
-* **No need to create `roms-verified/`** — Igir will automatically create this directory and its system subdirectories (under `{romm}/`) during processing.
+* **No need to create the  `roms-verified-only-retail/` directory** — Igir will automatically create this directory and its system subdirectories (under `{romm}/`) during processing.
 
-**Create the cleanup script `igir-romm-cleanup.sh` with the contents below:**
+**Create the "only retail" script `igir-romm-only-retail.sh` with the contents below:**
 
 ```shell
 #!/usr/bin/env bash
@@ -75,7 +76,7 @@ set -ou pipefail
 cd "$(dirname "${0}")"
 
 INPUT_DIR=roms-unverified
-OUTPUT_DIR=roms-verified
+OUTPUT_DIR=roms-verified-only-retail
 
 # Documentation: https://igir.io/
 # Uses dat files: https://datomatic.no-intro.org/index.php?page=download&op=daily
@@ -114,10 +115,10 @@ time npx -y igir@latest \
 
 **Make the script executable and run it:**
 
-`chmod a+x igir-romm-cleanup.sh`
-`./igir-romm-cleanup.sh`
+`chmod a+x igir-romm-only-retail.sh`
+`./igir-romm-only-retail.sh`
 
-### 1G1R script
+### "1G1R" (One Game, One Rom) script
 
 > "1G1R" stands for "One Game, One ROM." In the context of collected gaming ROMs, it refers to a method of organizing ROM sets where only one version of each game is kept, rather than including multiple regional variants, revisions, or duplicates. The goal is to create a streamlined collection that avoids redundancy while still preserving a playable and representative version of each game.
 
@@ -129,7 +130,7 @@ set -ou pipefail
 cd "$(dirname "${0}")"
 
 INPUT_DIR=roms-unverified
-OUTPUT_DIR=roms-verified
+OUTPUT_DIR=roms-verified-1g1r
 
 # Documentation: https://igir.io/
 # Uses dat files: https://datomatic.no-intro.org/index.php?page=download&op=daily
@@ -152,7 +153,7 @@ time npx -y igir@latest \
   --prefer-revision newer
 ```
 
-**Additional parameters in comparison to the cleanup script:**
+**Additional parameters in comparison to the "only-retail" script:**
 
 * `--single` enables 1G1R mode, ensuring only one ROM per game is kept based on the specified preferences.
 * `--prefer-region GER,EUR,WORLD,JPN` sets the region preference order: Germany (GER), Europe (EUR), World (WORLD), Japan (JPN) for selecting the desired ROM version. It is important that those are comma-separated without blanks.
@@ -189,7 +190,6 @@ would be transferred to:
 	├── Game A (Part 3).bin
 	└── Game A.cue
 ```
-
 
 ### Manually move over remaining files
 
