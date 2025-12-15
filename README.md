@@ -36,7 +36,32 @@ The directory structure is important for running the bulk ROM renaming script. B
 
 ### cleanup script
 
-**Prerequisites before running the script**
+The **cleanup script** (`igir-romm-cleanup.sh`) is a Bash script designed to process and "clean up" a ROM collection for use with RomM. It uses the latest version of Igir (via `npx`) to verify, organize, and filter ROMs against No-Intro/Redump DAT files, keeping only verified retail releases while extracting archives and generating reports.
+
+**What it does, step by step:**
+
+* Changes to the script's directory for consistent relative paths.
+* Sets input to `roms-unverified/` (a safe working copy of your original ROMs/archives).
+* Sets output to `roms-verified/{romm}/` (organizes files into RomM-compatible system subdirectories, e.g., `gb/` for Game Boy).
+* Runs Igir with these key commands/options:
+  * **extract**: Extracts ROMs from archives (e.g., .zip files).
+  * **move**: Moves verified/extracted ROMs to the output directory.
+  * **test**: Verifies the moved files' checksums match the DATs.
+  * **report**: Generates a CSV report of known/unknown ROMs and processing results.
+  * Uses DATs from `dats/` for verification.
+  * Performs thorough checksum calculation (decompresses archives fully, checks from CRC32 up to SHA256).
+  * **--only-retail**: Excludes non-retail ROMs (e.g., betas, prototypes, homebrew, demos).
+
+**Overall effect:**
+
+- Verified retail ROMs that match the DATs are extracted (if needed), moved to a clean, organized `roms-verified/` structure, and tested for integrity.
+- Unmatched/unknown files stay in `roms-unverified/` (safe, no deletions).
+- Multi-disc games (e.g., PS1) get grouped into folders as defined by the DATs.
+- It measures and displays runtime with `time`.
+
+This creates a "clean" retail-only collection ready for RomM import, without duplicates or non-retail variants. (There's a separate 1G1R script for further deduplication with region/language preferences.)
+
+**Prerequisites before running the script:**
 
 * Create the `roms-unverified/` directory and populate it with a copy of your ROM collection (e.g., `cp -r roms/ roms-unverified/`).
 * Create the `dats/` directory and place your No-Intro/Redump DAT files inside it.
