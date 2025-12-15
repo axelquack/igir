@@ -43,7 +43,7 @@ The **only-retail script** (`igir-romm-only-retail.sh`) is a Bash script designe
 
 * Changes to the script's directory for consistent relative paths.
 * Sets input to `roms-unverified/` (a safe working copy of your original ROMs/archives).
-* Sets output to `roms-verified/{romm}/` (organizes files into RomM-compatible system subdirectories, e.g., `gb/` for Game Boy).
+* Sets output to `roms-verified-only-retail/{romm}/` (organizes files into RomM-compatible system subdirectories, e.g., `gb/` for Game Boy).
 * Runs Igir with these key commands/options:
   * **extract**: Extracts ROMs from archives (e.g., .zip files).
   * **move**: Moves verified/extracted ROMs to the output directory.
@@ -55,7 +55,7 @@ The **only-retail script** (`igir-romm-only-retail.sh`) is a Bash script designe
 
 **Overall effect:**
 
-* Verified retail ROMs that match the DATs are extracted (if needed), moved to a clean, organized `roms-verified/` structure, and tested for integrity.
+* Verified retail ROMs that match the DATs are extracted (if needed), moved to a clean, organized `roms-verified-only-retail/` structure, and tested for integrity.
 * Unmatched/unknown files stay in `roms-unverified/` (safe, no deletions).
 * Multi-disc games (e.g., PS1) get grouped into folders as defined by the DATs.
 * It measures and displays runtime with `time`.
@@ -99,7 +99,7 @@ time npx -y igir@latest \
 * `set -ou pipefail` configures bash to exit on errors (-e), treat unset variables as errors (-u), and propagate errors through pipes (pipefail) for robust execution.
 * `cd "$(dirname "${0}")"` changes the working directory to where the script is located, ensuring relative paths (like INPUT_DIR) work consistently regardless of where the script is called from.
 * `INPUT_DIR=roms-unverified` defines the input directory where unverified ROM files (e.g., .zip archives or raw ROMs) are stored for processing.`
-* `OUTPUT_DIR=roms-verified` defines the output directory where verified ROMs will be moved after processing, with subdirectories created based on system type.
+* `OUTPUT_DIR=roms-verified-only-retail` defines the output directory where verified ROMs will be moved after processing, with subdirectories created based on system type.
 * `time npx -y igir@latest` runs the `igir` npm package (latest version) via npx, with  `-y` to auto-confirm installation if needed; `time` measures execution duration.
 * `move` moves verified ROM files from the input directory to the output directory after processing.
 * `extract` extracts ROM files from archives (e.g., `.zip`) in the input directory, making them accessible for verification.
@@ -107,7 +107,7 @@ time npx -y igir@latest \
 * `test` tests the moved ROM files to ensure they match expected standards (e.g., checksums) after being relocated.
 * `-d dats/` specifies the directory ('dats/') containing DAT files used for verifying ROM authenticity against known databases.
 * `-i "${INPUT_DIR}/"` sets the input directory (roms-unverified) where 'igir' looks for ROM files or archives to process.
-* `-o "${OUTPUT_DIR}"` sets the output directory (roms-verified) with '{romm}' as a replaceable symbol, organizing ROMs into RomM system-specific subdirectories (e.g., 'gb' for Game Boy).
+* `-o "${OUTPUT_DIR}"` sets the output directory (roms-verified-only-retail) with '{romm}' as a replaceable symbol, organizing ROMs into RomM system-specific subdirectories (e.g., 'gb' for Game Boy).
 * `--input-checksum-quick false` disables quick checksum checking, forcing full decompression of archives for accurate checksum calculation rather than relying on headers.
 * `--input-checksum-min CRC32` sets the minimum checksum level to CRC32, a basic hash for initial verification of ROM integrity which will be compared with the `.dat` file.
 * `--input-checksum-max SHA256` sets the maximum checksum level to SHA256, a more robust hash, ensuring thorough verification across a range of methods which will be compared with the `.dat` file.
@@ -168,7 +168,7 @@ time npx -y igir@latest \
 
 ### Run the script
 
-Run the script. It will generate a new output directory named `roms-verified`, moving the files from `roms-unverified` if its checksum matches any of the known checksums in the DAT files provided. Any ROMs not identified will remain in the `roms-unverified` directory.
+Run the script. It will generate a new output directory named `roms-verified-1g1r`, moving the files from `roms-unverified` if its checksum matches any of the known checksums in the DAT files provided. Any ROMs not identified will remain in the `roms-unverified` directory.
 
 Be aware that if, for instance, you have `.bin` or `.cue` files, they will automatically be organized into a folder structure. The `.dat` file will serve as the single source of truth defining this structure.
 
@@ -199,7 +199,7 @@ The script may not identify all of the ROMs in your input directory. You can cho
 npx -y igir@latest \
   move \
   -i roms-unverified/ \
-  -o roms-verified/ \
+  -o roms-verified-<name>/ \
   --dir-mirror
 ```
 
