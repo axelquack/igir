@@ -3,7 +3,7 @@ set -ou pipefail
 cd "$(dirname "${0}")"
 
 INPUT_DIR=roms-unverified
-OUTPUT_DIR=roms-verified
+OUTPUT_DIR=roms-verified-only-retail
 
 time npx -y igir@latest \
   report \
