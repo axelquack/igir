@@ -38,7 +38,7 @@ The directory structure is important for running the bulk ROM renaming script. B
 
 **Prerequisites before running the script**
 
-* Create the `roms-unverified/` directory and populate it with a copy of your ROM collection (e.g., `cp -r your-roms-folder/ roms-unverified/`).
+* Create the `roms-unverified/` directory and populate it with a copy of your ROM collection (e.g., `cp -r roms/ roms-unverified/`).
 * Create the `dats/` directory and place your No-Intro/Redump DAT files inside it.
 * **No need to create `roms-verified/`** — Igir will automatically create this directory and its system subdirectories (under `{romm}/`) during processing.
 
