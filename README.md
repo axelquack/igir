@@ -36,6 +36,12 @@ The directory structure is important for running the bulk ROM renaming script. B
 
 ### cleanup script
 
+**Prerequisites before running the script**
+
+* Create the `roms-unverified/` directory and populate it with a copy of your ROM collection (e.g., `cp -r your-roms-folder/ roms-unverified/`).
+* Create the `dats/` directory and place your No-Intro/Redump DAT files inside it.
+* **No need to create `roms-verified/`** — Igir will automatically create this directory and its system subdirectories (under `{romm}/`) during processing.
+
 **Create the cleanup script `igir-romm-cleanup.sh` with the contents below:**
 
 ```shell
@@ -81,9 +87,10 @@ time npx -y igir@latest \
 * `--input-checksum-max SHA256` sets the maximum checksum level to SHA256, a more robust hash, ensuring thorough verification across a range of methods which will be compared with the `.dat` file.
 * `--only-retail` filters the process to include only retail ROM releases, excluding non-retail versions like debug, demo, or homebrew by enabling related "no" options.
 
-**Make the script executable:**
+**Make the script executable and run it:**
 
 `chmod a+x igir-romm-cleanup.sh`
+`./igir-romm-cleanup.sh`
 
 ### 1G1R script
 
