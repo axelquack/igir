@@ -1,4 +1,39 @@
-# secrets and backups (agent rule 2026-11-12)
+# Secrets and environment files.
+# .env.example stays trackable as a template.
 .env
-*.bak*
+.env.*
+!.env.example
+
+# Keys, certificates, and credential dumps
+*.pem
+*.key
+*.p12
+id_rsa*
+credentials*.json
 secrets/
+
+# Session and cookie exports
+*.session
+cookies*.txt
+
+# Editor backups and swap files
+*.bak*
+*.orig
+*.swp
+
+# OS metadata
+.DS_Store
+
+# Node / npx artifacts. These scripts install and run Igir via npx.
+node_modules/
+dist/
+build/
+coverage/
+logs/
+*.log
+
+# IDE local settings.
+# Shared extension recommendations under .vscode/extensions.json stay trackable.
+.idea/
+.vscode/*
+!.vscode/extensions.json

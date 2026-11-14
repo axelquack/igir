@@ -234,3 +234,9 @@ Gets combined to:
 ```
 Game A (USA)
 ```
+
+## Security
+
+As of 2026-11-13, Dependabot alerts and automatic security updates are enabled for this repository. See [SECURITY.md](SECURITY.md).
+
+`.gitignore` is a public baseline so environment files, private keys, credential dumps, session and cookie exports, Node/npx artifacts, coverage output, logs, and local editor settings are not committed. `.env.example` stays trackable as a template.
